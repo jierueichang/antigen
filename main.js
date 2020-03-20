@@ -43,6 +43,10 @@ function buttonPressed(x,y,w,h){
     return false;
 }
 
+function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+};
+
 class cell{
     constructor(){
         this.size = randint(50,80);
@@ -328,12 +332,26 @@ function setup(){
 }
 
 function mouseClicked(){
-    if(tCellPos){
-        tcells.push(new tcell(tCellPos,[mouseX,mouseY]));
-        tCellPos = false;
+    if(isMobileDevice()===false){
+        if(tCellPos){
+            tcells.push(new tcell(tCellPos,[mouseX,mouseY]));
+            tCellPos = false;
+        }
+        else{
+            tCellPos = [mouseX,mouseY];
+        }
     }
-    else{
-        tCellPos = [mouseX,mouseY];
+}
+
+function touchStarted(){
+    if(isMobileDevice()){
+        if(tCellPos){
+            tcells.push(new tcell(tCellPos,[mouseX,mouseY]));
+            tCellPos = false;
+        }
+        else{
+            tCellPos = [mouseX,mouseY];
+        }
     }
 }
 
