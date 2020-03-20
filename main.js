@@ -16,6 +16,7 @@ let timeElapsed = 0;
 let tCellPos = false;
 
 let win = false;
+let start = true;
 
 function randint(l,h){
     return l+Math.random()*(h-l);
@@ -199,19 +200,6 @@ class tcell{
     }
 }
 
-/*function bcell(){
-    function render(){
-
-    }
-    function move(){
-
-    }
-    function killViruses(){
-
-    }
-}
-*/
-
 function reset(){
     cells = [];
     viruses = [];
@@ -244,6 +232,34 @@ function tCellMaker(){
         stroke(10);
         line(tCellPos[0],tCellPos[1],mouseX,mouseY);
         noStroke();
+    }
+}
+
+function startScreen(){
+    if(start){
+        fill(100,100);
+        rect(0,0,w,h);
+        fill(255);
+        rect(w/4,h/4,w/2,h/2);
+        fill(0);
+        textAlign(CENTER,TOP);
+        textSize(30);
+        text('antigen',w/4+5,h/4+10,w/2);
+        textSize(20);
+        text('Viruses have infiltrated the organism, wreaking havoc on whatever they meet! Direct T-Cells to destroy infected cells before the viruses infect everything.\n\nPress, drag, and release to launch t-cells.',w/4+5,h/4+60,w/2);
+        if(buttonHovered(w/4,h*5/8,w/2,h/8)){
+            fill(100,100,255);
+        }
+        else{
+            fill(100,255,100);
+        }
+        rect(w/4,h*5/8,w/2,h/8);
+        fill(0);
+        textSize(20);
+        text('Start!',w/4,h*11/16-10,w/2);
+        if(buttonPressed(w/4,h*5/8,w/2,h/8)){
+            start=false;
+        }
     }
 }
 
@@ -331,62 +347,61 @@ function setup(){
     noStroke();
 }
 
-function mouseClicked(){
-    if(isMobileDevice()===false){
-        if(tCellPos){
-            tcells.push(new tcell(tCellPos,[mouseX,mouseY]));
-            tCellPos = false;
-        }
-        else{
-            tCellPos = [mouseX,mouseY];
-        }
+function mousePressed(){
+    tCellPos = [mouseX,mouseY];
+}
+
+function mouseReleased(){
+    if(tCellPos){
+        tcells.push(new tcell(tCellPos,[mouseX,mouseY]));
+        tCellPos = false;
     }
 }
 
-function touchStarted(){
-    if(isMobileDevice()){
-        if(tCellPos){
-            tcells.push(new tcell(tCellPos,[mouseX,mouseY]));
-            tCellPos = false;
-        }
-        else{
-            tCellPos = [mouseX,mouseY];
-        }
+function touchEnded(){
+    if(tCellPos){
+        tcells.push(new tcell(tCellPos,[mouseX,mouseY]));
+        tCellPos = false;
     }
 }
 
 function draw(){
     background(255);
-    for(let j=0; j<cells.length;j++){
-        i=cells[j];
-        i.render();
-        i.move();
-        if(i.suicide()){
-            cells.splice(j,1);
+    if(start){
+        startScreen();
+    }
+    else{
+        for(let j=0; j<cells.length;j++){
+            i=cells[j];
+            i.render();
+            i.move();
+            if(i.suicide()){
+                cells.splice(j,1);
+            }
         }
-    }
-    for(let i of tcells){
-        i.render();
-        i.move();
-        i.killInfected();
-    }
-    for(let j=0; j<viruses.length;j++){
-        i=viruses[j];
-        i.render();
-        if(i.infect()||i.move()){
-            viruses.splice(j,1);
+        for(let i of tcells){
+            i.render();
+            i.move();
+            i.killInfected();
         }
-    }
-    tCellMaker();
-    displayCtrs();
-    tCellMaker();
-    endScreen();
-    winScreen();
-    if(healthy>0&&win===false){
-        timeElapsed+=1;
-    }
-    if(timeElapsed%200===0&&cviruses!=0&&infected!=0){
-        viruses.push(new virus(randint(0,w),randint(0,h)));
-        cviruses+=1;
+        for(let j=0; j<viruses.length;j++){
+            i=viruses[j];
+            i.render();
+            if(i.infect()||i.move()){
+                viruses.splice(j,1);
+            }
+        }
+        tCellMaker();
+        displayCtrs();
+        tCellMaker();
+        endScreen();
+        winScreen();
+        if(healthy>0&&win===false){
+            timeElapsed+=1;
+        }
+        if(timeElapsed%200===0&&cviruses!=0&&infected!=0){
+            viruses.push(new virus(randint(0,w),randint(0,h)));
+            cviruses+=1;
+        }
     }
 }
