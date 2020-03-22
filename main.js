@@ -237,7 +237,7 @@ function tCellMaker(){
 
 function startScreen(){
     if(start){
-        fill(100,100);
+        fill(100);
         rect(0,0,w,h);
         fill(255);
         rect(w/4,h/4,w/2,h/2);
@@ -246,7 +246,7 @@ function startScreen(){
         textSize(30);
         text('antigen',w/4+5,h/4+10,w/2);
         textSize(20);
-        text('Viruses have infiltrated the organism, wreaking havoc on whatever they meet! Direct T-Cells to destroy infected cells before the viruses infect everything.\n\nPress, drag, and release to launch t-cells.',w/4+5,h/4+60,w/2);
+        text('Viruses have appeared in the interstitial fluid, wreaking havoc on whatever they meet! Direct T-Cells to destroy infected cells ... before the viruses do.\n\nPress, drag, and release to launch t-cells.',w/4+5,h/4+60,w/2);
         if(buttonHovered(w/4,h*5/8,w/2,h/8)){
             fill(100,100,255);
         }
